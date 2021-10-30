@@ -69,6 +69,8 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
   }
 });
+
+//// tabbed component
 // btnContainer
 const tabContainers = document.querySelector('.operations__tab-container');
 // contents 
@@ -88,13 +90,47 @@ tabContainers.addEventListener('click', (e) => {
 
   // data-tab 
   const tabActive = clicked.dataset.tab;
+  // clear active 
   tabOperations.forEach(element => element.classList.remove('operations__tab--active'));
   tabContents.forEach(element => element.classList.remove('operations__content--active'));
-
+  // add active
   document.querySelector(`.operations__tab--${tabActive}`).classList.add('operations__tab--active');
   document.querySelector(`.operations__content--${tabActive}`).classList.add('operations__content--active');
 
 })
+
+
+const navlinkHover = function (e) {
+  // tìm btns
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    // Cách 1: tìm cha
+    // tìm cha 
+    // const nav = link.closest('.nav');
+
+    // Cách 2: dùng closest
+    // tim siblings
+    const linkSib = link.closest('.nav').querySelectorAll('.nav__link');
+    // tim logo
+    const logo = link.closest('.nav').querySelector('img');
+
+
+    logo.style.opacity = this;
+    linkSib.forEach(li => {
+      if (li !== link) {
+        li.style.opacity = this
+      }
+    });
+  }
+}
+
+
+//// Menu fade animation
+document.querySelector('.nav').addEventListener('mouseover', navlinkHover.bind(0.5));
+
+document.querySelector('.nav').addEventListener('mouseout', navlinkHover.bind(1))
+
+
 ////////////////////////////////////////
 
 
