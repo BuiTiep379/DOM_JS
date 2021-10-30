@@ -69,9 +69,32 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
   }
 });
+// btnContainer
+const tabContainers = document.querySelector('.operations__tab-container');
+// contents 
+const tabContents = document.querySelectorAll('.operations__content');
+// btns
+const tabOperations = document.querySelectorAll('.operations__tab');
 
+tabContainers.addEventListener('click', (e) => {
+  const clicked = e.target.closest('.operations__tab');
 
+  if (!clicked) return;
+  // get attribute 
+  const idActive = clicked.getAttribute('data-tab');
+  // get dataset in html
+  // data-id 
+  // const id = clicked.dataset.id;
 
+  // data-tab 
+  const tabActive = clicked.dataset.tab;
+  tabOperations.forEach(element => element.classList.remove('operations__tab--active'));
+  tabContents.forEach(element => element.classList.remove('operations__content--active'));
+
+  document.querySelector(`.operations__tab--${tabActive}`).classList.add('operations__tab--active');
+  document.querySelector(`.operations__content--${tabActive}`).classList.add('operations__content--active');
+
+})
 ////////////////////////////////////////
 
 
