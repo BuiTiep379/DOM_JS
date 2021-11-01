@@ -146,7 +146,6 @@ const navHeight = nav.getBoundingClientRect().height;
 
 const stickyNav = function (entries) {
   const [entry] = entries;
-  console.log(entry);
   if (!entry.isIntersecting) {
     nav.classList.add('sticky');
   } else {
@@ -161,6 +160,62 @@ const headerObserver = new IntersectionObserver(stickyNav, {
 });
 
 headerObserver.observe(header);
+
+
+
+/// Revealing section
+
+const allSections = document.querySelectorAll('.section');
+
+const sectionOb = function (entries, observer) {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) return;
+  entry.target.classList.remove('section--hidden');
+
+  observer.unobserve(entry.target);
+}
+
+
+const sectionsObserver = new IntersectionObserver(sectionOb, {
+  root: null,
+  threshold: 0.15,
+});
+
+
+allSections.forEach((section) => {
+  section.classList.add('section--hidden');
+  sectionsObserver.observe(section);
+});
+
+
+/// lazy load image 
+// This selects all image elements which have a data-src attribute. This is a CUSTOM data attribute
+const imageLazy = document.querySelectorAll('img[data-src]');
+console.log(imageLazy);
+const lazyLoadImg = function (entries, observer) {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) return;
+  else {
+    // This happens asynchronously, behind the scenes. When it's ready, the image emits a load event.
+    entry.target.src = entry.target.dataset.src;
+    // With this, we handle the event when the image finished loading. We then remove the blurred filter! We use a reguylar function here becuase I want to use 'this'
+    entry.target.addEventListener("load", function () {
+      this.classList.remove("lazy-img");
+    });
+  };
+  observer.observe(entry.target);
+}
+const imageLazyObserver = new IntersectionObserver(lazyLoadImg, {
+  root: null,
+  threshold: 0,
+  // We need to load this image BEFORE we actually reach it, so we don't create a visible lag. To acieve this, we add a 200px margin to the bottom, virtually "extending the viewport 200px down", so that it is intersected earlier. [Check if it works on network tab]
+  // We want EXACTLY 200px, not some percentage, that's why we use the margin here, and NOT the treshold
+  rootMargin: "0px 0px -200px 0px",
+});
+
+imageLazy.forEach(image => imageLazyObserver.observe(image));
 ////////////////////////////////////////
 
 
