@@ -184,7 +184,7 @@ const sectionsObserver = new IntersectionObserver(sectionOb, {
 
 
 allSections.forEach((section) => {
-  section.classList.add('section--hidden');
+  // section.classList.add('section--hidden');
   sectionsObserver.observe(section);
 });
 
@@ -192,7 +192,6 @@ allSections.forEach((section) => {
 /// lazy load image 
 // This selects all image elements which have a data-src attribute. This is a CUSTOM data attribute
 const imageLazy = document.querySelectorAll('img[data-src]');
-console.log(imageLazy);
 const lazyLoadImg = function (entries, observer) {
   const [entry] = entries;
 
@@ -216,6 +215,78 @@ const imageLazyObserver = new IntersectionObserver(lazyLoadImg, {
 });
 
 imageLazy.forEach(image => imageLazyObserver.observe(image));
+
+
+/// slider component 
+const slides = document.querySelectorAll('.slide');
+const btnNext = document.querySelector('.slider__btn--right');
+const btnPrevious = document.querySelector('.slider__btn--left');
+
+
+
+const slider = document.querySelector('.slider');
+// slider.style.transform = 'scale(0.4) translateX(-800px)';
+// slider.style.overflow = 'visible';
+// console.log(slides);
+const dotContainers = document.querySelector('.dots');
+
+let currentSlide = 0;
+const maxSlide = slides.length;
+const createDots = function (slides) {
+  slides.forEach((slide, index) =>
+    dotContainers.insertAdjacentHTML('beforeend', `<button class="dots__dot dots__dot--active" data-slide=${index}></button>`)
+  );
+};
+const gotoSlide = function (current) {
+  slides.forEach((slide, index) => slide.style.transform = `translateX(${(index - current) * 100}%)`);
+};
+
+const activeDot = function (current) {
+  const allDots = document.querySelectorAll('.dots__dot');
+  allDots.forEach((dot, index) => {
+    dot.classList.remove('dots__dot--active');
+    if (index === current) {
+      dot.classList.add('dots__dot--active');
+    }
+  });
+}
+const previousSlide = function () {
+  if (currentSlide == 0) {
+    currentSlide = maxSlide - 1;
+  } else {
+    currentSlide--;
+  }
+  gotoSlide(currentSlide);
+  activeDot(currentSlide);
+};
+
+const nextSlide = function () {
+  if (currentSlide == maxSlide - 1) {
+    currentSlide = 0;
+  } else {
+    currentSlide++;
+  }
+  gotoSlide(currentSlide);
+  activeDot(currentSlide);
+};
+const init = function () {
+  createDots(slides);
+  gotoSlide(0);
+  activeDot(0);
+};
+init();
+btnPrevious.addEventListener('click', previousSlide);
+btnNext.addEventListener('click', nextSlide);
+
+document.addEventListener('keydown', (e) => {
+  if (e.key == "ArrowRight") {
+    nextSlide();
+  }
+  if (e.key == "ArrowLeft") {
+    previousSlide()
+  }
+});
+
 ////////////////////////////////////////
 
 
